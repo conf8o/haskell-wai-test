@@ -9,6 +9,7 @@ import qualified Network.HTTP.Types as HTypes
 import Network.HTTP.Types (StdMethod (GET))
 import qualified Data.Text as T
 import qualified Data.ByteString as B
+import Data.ByteString.Builder (byteString)
 
 type Path = [T.Text]
 type RoutingInfo = (HTypes.StdMethod, Path)
@@ -39,7 +40,7 @@ getIndex _ send =
 
 getArticles :: Wai.Application
 getArticles req send = 
-    send $ Wai.responseBuilder HTypes.status201 [] ""
+    send $ Wai.responseBuilder HTypes.status201 [] $ byteString (Wai.rawPathInfo req)
 
 postArticles :: Wai.Application
 postArticles req send =
