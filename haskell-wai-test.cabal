@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Router
   other-modules:
       Paths_haskell_wai_test
   autogen-modules:
