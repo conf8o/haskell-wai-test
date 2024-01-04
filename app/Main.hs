@@ -15,17 +15,16 @@ main = Warp.run 8000 router
 
 type Routinginfo = (HTypes.StdMethod, [T.Text])
 
-parseReqInfo :: Wai.Request -> Either B.ByteString Routinginfo
-parseReqInfo req =
+parseRoutingInfo :: Wai.Request -> Either B.ByteString Routinginfo
+parseRoutingInfo req =
     fmap (, Wai.pathInfo req)
-    $ HTypes.parseMethod
-    $ Wai.requestMethod req
+    $ HTypes.parseMethod . Wai.requestMethod
+    $ req
 
 router :: Wai.Application
 router req =
-    case parseReqInfo req of
-        Right reqInfo ->
-            routing reqInfo req
+    case parseRoutingInfo req of
+        Right routingInfo -> routing routingInfo req
         _ -> notFound req
 
 routing :: Routinginfo -> Wai.Application
