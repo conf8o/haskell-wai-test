@@ -13,17 +13,18 @@ import qualified Data.ByteString as B
 main :: IO ()
 main = Warp.run 8000 router
 
-type Routinginfo = (HTypes.StdMethod, [T.Text])
+type Path = [T.Text]
+type Routinginfo = (HTypes.StdMethod, Path)
 
-parseRoutingInfo :: Wai.Request -> Either B.ByteString Routinginfo
-parseRoutingInfo req =
+toRoutingInfo :: Wai.Request -> Either B.ByteString Routinginfo
+toRoutingInfo req =
     fmap (, Wai.pathInfo req)
     $ HTypes.parseMethod . Wai.requestMethod
     $ req
 
 router :: Wai.Application
 router req =
-    case parseRoutingInfo req of
+    case toRoutingInfo req of
         Right routingInfo -> routing routingInfo req
         _ -> notFound req
 
